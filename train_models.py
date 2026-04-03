@@ -9,7 +9,7 @@ import pickle
 import warnings
 warnings.filterwarnings('ignore')
 
-from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
+from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold, RandomizedSearchCV
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
@@ -164,34 +164,73 @@ X_test_scaled = pd.DataFrame(
 # ============================================================================
 print("\n[6/8] Training models...")
 
+# Hyperparameter grids
+rf_param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [5, 10, 15, None],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4],
+    'max_features': ['sqrt', 'log2']
+}
+
+gb_param_grid = {
+    'n_estimators': [100, 200, 300],
+    'max_depth': [3, 4, 5, 6],
+    'learning_rate': [0.01, 0.05, 0.1],
+    'min_samples_split': [2, 5, 10],
+    'subsample': [0.8, 0.9, 1.0]
+}
+
+# Tune Random Forest
+print("\n   Tuning Random Forest...")
+rf_base = RandomForestClassifier(
+    random_state=config.RANDOM_STATE,
+    class_weight='balanced',
+    n_jobs=-1
+)
+rf_search = RandomizedSearchCV(
+    rf_base, rf_param_grid,
+    n_iter=100, cv=5,
+    scoring='roc_auc',
+    random_state=config.RANDOM_STATE,
+    n_jobs=-1, verbose=1
+)
+rf_search.fit(X_train, y_train)
+print(f"   Best RF params: {rf_search.best_params_}")
+print(f"   Best RF CV ROC-AUC: {rf_search.best_score_:.4f}")
+
+# Tune Gradient Boosting
+print("\n   Tuning Gradient Boosting...")
+gb_base = GradientBoostingClassifier(
+    random_state=config.RANDOM_STATE
+)
+gb_search = RandomizedSearchCV(
+    gb_base, gb_param_grid,
+    n_iter=100, cv=5,
+    scoring='roc_auc',
+    random_state=config.RANDOM_STATE,
+    n_jobs=-1, verbose=1
+)
+gb_search.fit(X_train, y_train)
+print(f"   Best GB params: {gb_search.best_params_}")
+print(f"   Best GB CV ROC-AUC: {gb_search.best_score_:.4f}")
+
 models = {
     'Logistic Regression': LogisticRegression(
-        max_iter=1000, 
-        random_state=config.RANDOM_STATE, 
+        max_iter=1000,
+        random_state=config.RANDOM_STATE,
         class_weight='balanced',
         solver='lbfgs'
     ),
-    'Random Forest': RandomForestClassifier(
-        n_estimators=100, 
-        max_depth=10, 
-        random_state=config.RANDOM_STATE, 
-        class_weight='balanced',
-        n_jobs=-1
-    ),
-    'Gradient Boosting': GradientBoostingClassifier(
-        n_estimators=100, 
-        max_depth=5, 
-        learning_rate=0.1, 
-        random_state=config.RANDOM_STATE
-    ),
+    'Random Forest': rf_search.best_estimator_,      
+    'Gradient Boosting': gb_search.best_estimator_,  
     'Neural Network': MLPClassifier(
-        hidden_layer_sizes=(100, 50), 
-        max_iter=500, 
-        random_state=config.RANDOM_STATE, 
+        hidden_layer_sizes=(100, 50),
+        max_iter=500,
+        random_state=config.RANDOM_STATE,
         early_stopping=True
     )
 }
-
 trained_models = {}
 model_metrics = {}
 
