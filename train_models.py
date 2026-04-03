@@ -10,7 +10,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
-from sklearn.preprocessing import OrdinalEncoder, StandardScaler, TargetEncoder
+from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
@@ -124,15 +124,9 @@ print(f"   Numerical: {len(numerical_cols)}")
 ordinal_encoder = OrdinalEncoder(categories=[['New', 'Medium', 'Long']])
 X['Tenure_Category'] = ordinal_encoder.fit_transform(X[['Tenure_Category']])
 
-# Target encoding for PaymentMethod and Contract
-target_encoder = TargetEncoder(target_type='binary')
-X[['PaymentMethod', 'Contract']] = target_encoder.fit_transform(
-    X[['PaymentMethod', 'Contract']], y
-)
-
 # One-hot encode remaining nominal categoricals
 nominal_cols = [col for col in categorical_cols 
-                if col not in ['Tenure_Category', 'PaymentMethod', 'Contract']]
+                if col not in ['Tenure_Category']]
 X_encoded = pd.get_dummies(X, columns=nominal_cols)
 
 # ============================================================================
@@ -279,10 +273,6 @@ with open(config.SCALER_PATH, 'wb') as f:
 # Save ordinal encoder 
 with open(config.ORDINAL_ENCODER_PATH, 'wb') as f:
     pickle.dump(ordinal_encoder, f)
-
-# Save target encoder
-with open(config.TARGET_ENCODER_PATH, 'wb') as f:
-    pickle.dump(target_encoder, f)
 
 # Save feature names
 with open(config.FEATURE_NAMES_PATH, 'wb') as f:

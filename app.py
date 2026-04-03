@@ -67,10 +67,9 @@ def load_artifacts():
     with open(config.METRICS_PATH,      'r' ) as f: metrics      = json.load(f)
     with open(config.TEST_DATA_PATH,    'rb') as f: test_data    = pickle.load(f)
     with open(config.ORDINAL_ENCODER_PATH,  'rb') as f: ordinal_encoder= pickle.load(f)
-    with open(config.TARGET_ENCODER_PATH, 'rb') as f: target_encoder = pickle.load(f)
-    return models, scaler, feature_names, metrics, test_data, ordinal_encoder, target_encoder
+    return models, scaler, feature_names, metrics, test_data, ordinal_encoder
 
-models, scaler, feature_names, metrics, test_data, ordinal_encoder, target_encoder = load_artifacts()
+models, scaler, feature_names, metrics, test_data, ordinal_encoder = load_artifacts()
 
 # Pre-load background dataset for SHAP (first 200 test rows)
 _X_bg_raw    = np.array(test_data['X_test'])[:200]
@@ -362,14 +361,9 @@ def preprocess_input(data: pd.DataFrame) -> pd.DataFrame:
     # Ordinal encode Tenure_Category
     df[['Tenure_Category']] = ordinal_encoder.transform(df[['Tenure_Category']])
 
-    # Target encode PaymentMethod and Contract
-    df[['PaymentMethod', 'Contract']] = target_encoder.transform(
-        df[['PaymentMethod', 'Contract']]
-    )
-
     # One-hot encode remaining nominal categoricals
     cat_cols = [col for col in df.select_dtypes(include=['object']).columns.tolist()
-                if col not in ['PaymentMethod', 'Contract']]
+                if col not in ['Tenure_Category']]
     df_enc = pd.get_dummies(df, columns=cat_cols)
 
     for col in feature_names:
