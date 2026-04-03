@@ -1,6 +1,6 @@
 """
 Telco Churn Prediction - Model Training Pipeline
-Uses real Kaggle Telco dataset with proper academic methodology
+(Uses Kaggle Telco dataset for Churn Analysis)
 """
 
 import pandas as pd
@@ -10,9 +10,8 @@ import warnings
 warnings.filterwarnings('ignore')
 
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OrdinalEncoder, StandardScaler, TargetEncoder
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import OrdinalEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import (
@@ -106,6 +105,7 @@ print(f"   New shape: {df_processed.shape}")
 
 # ============================================================================
 # 4. ENCODING CATEGORICAL VARIABLES
+# (Ordinal → Tenure_Category | Target → PaymentMethod, Contract | One-Hot → rest)
 # ============================================================================
 print("\n[4/8] Encoding categorical variables...")
 
@@ -124,8 +124,15 @@ print(f"   Numerical: {len(numerical_cols)}")
 ordinal_encoder = OrdinalEncoder(categories=[['New', 'Medium', 'Long']])
 X['Tenure_Category'] = ordinal_encoder.fit_transform(X[['Tenure_Category']])
 
-# One-hot encoding for remaining nominal categoricals (no drop_first)
-nominal_cols = [col for col in categorical_cols if col != 'Tenure_Category']
+# Target encoding for PaymentMethod and Contract
+target_encoder = TargetEncoder(target_type='binary')
+X[['PaymentMethod', 'Contract']] = target_encoder.fit_transform(
+    X[['PaymentMethod', 'Contract']], y
+)
+
+# One-hot encode remaining nominal categoricals
+nominal_cols = [col for col in categorical_cols 
+                if col not in ['Tenure_Category', 'PaymentMethod', 'Contract']]
 X_encoded = pd.get_dummies(X, columns=nominal_cols)
 
 # ============================================================================
@@ -272,6 +279,10 @@ with open(config.SCALER_PATH, 'wb') as f:
 # Save ordinal encoder 
 with open(config.ORDINAL_ENCODER_PATH, 'wb') as f:
     pickle.dump(ordinal_encoder, f)
+
+# Save target encoder
+with open(config.TARGET_ENCODER_PATH, 'wb') as f:
+    pickle.dump(target_encoder, f)
 
 # Save feature names
 with open(config.FEATURE_NAMES_PATH, 'wb') as f:

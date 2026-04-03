@@ -1,12 +1,11 @@
 """
 Telco Customer Churn Prediction Application
-Final Year Project — with Real Dynamic SHAP Explanations
+Decision Support System for Customer Support Specialists — with Real Dynamic SHAP Explanations
 
 SHAP Implementation:
 - Linear SHAP  → Logistic Regression (analytical, exact)
 - Perturbation SHAP → Random Forest, Gradient Boosting, Neural Network
   Each explanation is computed per-customer dynamically.
-  No two customers get the same explanation.
 """
 
 import streamlit as st
@@ -68,9 +67,10 @@ def load_artifacts():
     with open(config.METRICS_PATH,      'r' ) as f: metrics      = json.load(f)
     with open(config.TEST_DATA_PATH,    'rb') as f: test_data    = pickle.load(f)
     with open(config.ORDINAL_ENCODER_PATH,  'rb') as f: ordinal_encoder= pickle.load(f)
-    return models, scaler, feature_names, metrics, test_data, ordinal_encoder
+    with open(config.TARGET_ENCODER_PATH, 'rb') as f: target_encoder = pickle.load(f)
+    return models, scaler, feature_names, metrics, test_data, ordinal_encoder, target_encoder
 
-models, scaler, feature_names, metrics, test_data, ordinal_encoder = load_artifacts()
+models, scaler, feature_names, metrics, test_data, ordinal_encoder, target_encoder = load_artifacts()
 
 # Pre-load background dataset for SHAP (first 200 test rows)
 _X_bg_raw    = np.array(test_data['X_test'])[:200]
@@ -362,8 +362,14 @@ def preprocess_input(data: pd.DataFrame) -> pd.DataFrame:
     # Ordinal encode Tenure_Category
     df[['Tenure_Category']] = ordinal_encoder.transform(df[['Tenure_Category']])
 
-    # One-hot encode remaining categoricals
-    cat_cols = df.select_dtypes(include=['object']).columns.tolist()
+    # Target encode PaymentMethod and Contract
+    df[['PaymentMethod', 'Contract']] = target_encoder.transform(
+        df[['PaymentMethod', 'Contract']]
+    )
+
+    # One-hot encode remaining nominal categoricals
+    cat_cols = [col for col in df.select_dtypes(include=['object']).columns.tolist()
+                if col not in ['PaymentMethod', 'Contract']]
     df_enc = pd.get_dummies(df, columns=cat_cols)
 
     for col in feature_names:

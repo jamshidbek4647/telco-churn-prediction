@@ -1,8 +1,8 @@
 # Telco Customer Churn Prediction
 
 ### ✨ Features
-
-- **84% ROC-AUC** performance with Gradient Boosting
+- Best model -- **84% ROC-AUC** performance with Logistic Regression (CV: 84.47%)
+- Next best model (slight difference) -- **84% ROC-AUC** performance with Gradient Boosting
 - **4 ML Models** compared: Logistic Regression, Random Forest, Gradient Boosting, Neural Network
 - **3 Analysis Modes**: Individual, Batch, Performance Evaluation
 - **Fixed UI** with perfect color contrast
@@ -13,12 +13,13 @@
 ```
 ├── data/
 │   └── telco-churn.csv          # Real Kaggle dataset
-├── models/
+├── ├── models/
 │   ├── models.pkl               # Trained models
-│   ├── scaler.pkl              # Feature scaler
-│   ├── feature_names.pkl       # Feature names
-│   ├── model_metrics.json      # Performance metrics
-│   └── test_data.pkl           # Test set
+│   ├── scaler.pkl               # Feature scaler
+│   ├── ordinal_encoder.pkl      # Ordinal encoder for Tenure_Category
+│   ├── feature_names.pkl        # Feature names
+│   ├── model_metrics.json       # Performance metrics
+│   └── test_data.pkl            # Test set
 ├── config.py                    # Configuration
 ├── app.py                       # Streamlit app
 ├── train_models.py              # Training pipeline
