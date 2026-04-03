@@ -23,6 +23,7 @@ SCALER_PATH = os.path.join(MODELS_DIR, "scaler.pkl")
 FEATURE_NAMES_PATH = os.path.join(MODELS_DIR, "feature_names.pkl")
 METRICS_PATH = os.path.join(MODELS_DIR, "model_metrics.json")
 TEST_DATA_PATH = os.path.join(MODELS_DIR, "test_data.pkl")
+ORDINAL_ENCODER_PATH = os.path.join(MODELS_DIR, "ordinal_encoder.pkl")
 
 # ============================================================================
 # MODEL SETTINGS

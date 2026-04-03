@@ -67,9 +67,10 @@ def load_artifacts():
     with open(config.FEATURE_NAMES_PATH,'rb') as f: feature_names= pickle.load(f)
     with open(config.METRICS_PATH,      'r' ) as f: metrics      = json.load(f)
     with open(config.TEST_DATA_PATH,    'rb') as f: test_data    = pickle.load(f)
-    return models, scaler, feature_names, metrics, test_data
+    with open(config.ORDINAL_ENCODER_PATH,  'rb') as f: ordinal_encoder= pickle.load(f)
+    return models, scaler, feature_names, metrics, test_data, ordinal_encoder
 
-models, scaler, feature_names, metrics, test_data = load_artifacts()
+models, scaler, feature_names, metrics, test_data, ordinal_encoder = load_artifacts()
 
 # Pre-load background dataset for SHAP (first 200 test rows)
 _X_bg_raw    = np.array(test_data['X_test'])[:200]
@@ -358,8 +359,12 @@ def preprocess_input(data: pd.DataFrame) -> pd.DataFrame:
         if col in df.columns:
             df = df.drop(col, axis=1)
 
+    # Ordinal encode Tenure_Category
+    df[['Tenure_Category']] = ordinal_encoder.transform(df[['Tenure_Category']])
+
+    # One-hot encode remaining categoricals
     cat_cols = df.select_dtypes(include=['object']).columns.tolist()
-    df_enc   = pd.get_dummies(df, columns=cat_cols, drop_first=True)
+    df_enc = pd.get_dummies(df, columns=cat_cols)
 
     for col in feature_names:
         if col not in df_enc.columns:

@@ -12,6 +12,7 @@ warnings.filterwarnings('ignore')
 from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import OrdinalEncoder
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import (
@@ -102,6 +103,7 @@ df_processed['ServiceDensity'] = df_processed.apply(
 print(f"   Engineered 5 features")
 print(f"   New shape: {df_processed.shape}")
 
+
 # ============================================================================
 # 4. ENCODING CATEGORICAL VARIABLES
 # ============================================================================
@@ -113,12 +115,18 @@ y = df_processed['Churn'].map({'Yes': 1, 'No': 0})
 categorical_cols = X.select_dtypes(include=['object']).columns.tolist()
 numerical_cols = X.select_dtypes(include=['int64', 'float64']).columns.tolist()
 
+
+
 print(f"   Categorical: {len(categorical_cols)}")
 print(f"   Numerical: {len(numerical_cols)}")
 
-# One-hot encode
-X_encoded = pd.get_dummies(X, columns=categorical_cols, drop_first=True)
-print(f"   Encoded shape: {X_encoded.shape}")
+# Ordinal encoding for Tenure_Category (has natural order)
+ordinal_encoder = OrdinalEncoder(categories=[['New', 'Medium', 'Long']])
+X['Tenure_Category'] = ordinal_encoder.fit_transform(X[['Tenure_Category']])
+
+# One-hot encoding for remaining nominal categoricals (no drop_first)
+nominal_cols = [col for col in categorical_cols if col != 'Tenure_Category']
+X_encoded = pd.get_dummies(X, columns=nominal_cols)
 
 # ============================================================================
 # 5. TRAIN-TEST SPLIT
@@ -260,6 +268,10 @@ with open(config.MODELS_PATH, 'wb') as f:
 # Save scaler
 with open(config.SCALER_PATH, 'wb') as f:
     pickle.dump(scaler, f)
+
+# Save ordinal encoder 
+with open(config.ORDINAL_ENCODER_PATH, 'wb') as f:
+    pickle.dump(ordinal_encoder, f)
 
 # Save feature names
 with open(config.FEATURE_NAMES_PATH, 'wb') as f:
