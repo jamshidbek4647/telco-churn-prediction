@@ -547,10 +547,10 @@ with tab1:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-#  TAB 2 — BULK ANALYSIS
+#  TAB 2 — BULK CUSTOMER ANALYSIS
 # ═══════════════════════════════════════════════════════════════════════════════
 with tab2:
-    st.header("Bulk Analysis")
+    st.header("Bulk Customer Analysis")
     st.markdown("Upload a file and get risk predictions **plus SHAP-driven explanations per risk group**.")
 
     uploaded = st.file_uploader("📁 Upload CSV / XLSX", type=['csv','xlsx'])
