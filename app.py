@@ -278,7 +278,7 @@ def plot_global_shap(df: pd.DataFrame, model_name: str, top_n: int = 15) -> plt.
     return fig
 
 
-# ── BATCH SHAP SUMMARY ────────────────────────────────────────────────────────
+# ── BULK SHAP SUMMARY ────────────────────────────────────────────────────────
 def compute_batch_shap_summary(model_name: str,
                                 processed_batch: pd.DataFrame,
                                 risk_categories: list,
@@ -361,7 +361,7 @@ def preprocess_input(data: pd.DataFrame) -> pd.DataFrame:
     # Ordinal encode Tenure_Category
     df[['Tenure_Category']] = ordinal_encoder.transform(df[['Tenure_Category']])
 
-    # One-hot encode remaining nominal categoricals
+    # One-hot encode for all other features
     cat_cols = [col for col in df.select_dtypes(include=['object']).columns.tolist()
                 if col not in ['Tenure_Category']]
     df_enc = pd.get_dummies(df, columns=cat_cols)
@@ -409,7 +409,7 @@ st.markdown("*Machine-learning churn prediction with dynamic SHAP explanations*"
 st.markdown("---")
 
 tab1, tab2, tab3 = st.tabs(
-    ["🔍 Individual Analysis", "📊 Batch Analysis", "📈 Model Performance"]
+    ["🔍 Individual Analysis", "📊 Bulk Analysis", "📈 Model Performance"]
 )
 
 
@@ -547,10 +547,10 @@ with tab1:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-#  TAB 2 — BATCH ANALYSIS
+#  TAB 2 — BULK ANALYSIS
 # ═══════════════════════════════════════════════════════════════════════════════
 with tab2:
-    st.header("Batch Analysis")
+    st.header("Bulk Analysis")
     st.markdown("Upload a file and get risk predictions **plus SHAP-driven explanations per risk group**.")
 
     uploaded = st.file_uploader("📁 Upload CSV / XLSX", type=['csv','xlsx'])

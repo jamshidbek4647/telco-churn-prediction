@@ -1,8 +1,7 @@
 # Telco Customer Churn Prediction
 
 ### ✨ Features
-- Best model -- **84% ROC-AUC** performance with Logistic Regression (CV: 84.47%)
-- Next best model (slight difference) -- **84% ROC-AUC** performance with Gradient Boosting
+- **84.57% ROC-AUC** performance with Gradient Boosting (after hyperparameter tuning)
 - **4 ML Models** compared: Logistic Regression, Random Forest, Gradient Boosting, Neural Network
 - **3 Analysis Modes**: Individual, Batch, Performance Evaluation
 - **Fixed UI** with perfect color contrast
@@ -13,7 +12,7 @@
 ```
 ├── data/
 │   └── telco-churn.csv          # Real Kaggle dataset
-├── ├── models/
+├── models/
 │   ├── models.pkl               # Trained models
 │   ├── scaler.pkl               # Feature scaler
 │   ├── ordinal_encoder.pkl      # Ordinal encoder for Tenure_Category
@@ -44,17 +43,19 @@ streamlit run app.py
 
 | Model | ROC-AUC | F1-Score | Accuracy |
 |-------|---------|----------|----------|
-| **Gradient Boosting** | **0.8417** | **0.5765** | **0.7956** |
-| Logistic Regression | 0.8415 | 0.6168 | 0.7381 |
-| Random Forest | 0.8376 | 0.6280 | 0.7722 |
-| Neural Network | 0.8348 | 0.5421 | 0.7878 |
+| **Gradient Boosting** | **0.8457** | **0.5771** | **0.8034** |
+| Logistic Regression | 0.8413 | 0.6180 | 0.7402 |
+| Random Forest | 0.8407 | 0.6323 | 0.7672 |
+| Neural Network | 0.8354 | 0.5810 | 0.7963 |
 
 ### 🎨 Fixed Issues
 
 ✅ **Color Contrast**: Dark text on light backgrounds (perfectly readable)
 ✅ **Relative Paths**: Uses config.py, works from any directory  
 ✅ **Real Dataset**: Kaggle Telco Customer Churn data
-✅ **Performance**: 84% ROC-AUC vs 70% with synthetic data
+✅ **Performance**: 84.57% ROC-AUC vs 70% with synthetic data
+✅ **Smart Encoding**: Ordinal encoding for ordered features, One-Hot for nominal
+✅ **Hyperparameter Tuning**: RandomizedSearchCV optimization for RF and GB models
 
 ### 🔧 Configuration
 
@@ -82,11 +83,16 @@ COLORS = {
 4. Contract Value
 5. Service Density
 
+**Encoding:**
+- Ordinal Encoding for Tenure_Category (preserves New → Medium → Long order)
+- One-Hot Encoding for remaining categorical features
+
 **Training:**
 - 80/20 stratified split
 - 5-fold cross-validation
 - Class weights for imbalance
 - StandardScaler for numerical features
+- RandomizedSearchCV hyperparameter tuning (n_iter=100, cv=5) for Gradient Boosting and Random Forest
 
 **Evaluation:**
 - ROC-AUC (primary metric)
