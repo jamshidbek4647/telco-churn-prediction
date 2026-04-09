@@ -1,9 +1,10 @@
+```markdown
 # Telco Customer Churn Prediction
 
 ### ✨ Features
 - **84.57% ROC-AUC** performance with Gradient Boosting (after hyperparameter tuning)
-- **4 ML Models** compared: Logistic Regression, Random Forest, Gradient Boosting, Neural Network
-- **3 Analysis Modes**: Individual, Batch, Performance Evaluation
+- **4 fodels** compared: Logistic Regression, Random Forest, Gradient Boosting, Neural Network
+- **3 Analysis Modes**: Individual Analysis, Bulk Customer Analysis, Model Performance
 - **Fixed UI** with perfect color contrast
 - **Relative Paths** works from any directory
 
@@ -51,7 +52,7 @@ streamlit run app.py
 ### 🎨 Fixed Issues
 
 ✅ **Color Contrast**: Dark text on light backgrounds (perfectly readable)
-✅ **Relative Paths**: Uses config.py, works from any directory  
+✅ **Relative Paths**: Uses config.py, works from any directory
 ✅ **Real Dataset**: Kaggle Telco Customer Churn data
 ✅ **Performance**: 84.57% ROC-AUC vs 70% with synthetic data
 ✅ **Smart Encoding**: Ordinal encoding for ordered features, One-Hot for nominal
@@ -107,7 +108,7 @@ COLORS = {
 2. Click "Predict"
 3. View risk level and top factors
 
-**Batch Analysis:**
+**Bulk Customer Analysis:**
 1. Upload CSV/XLSX
 2. Click "Analyze"
 3. Download results
@@ -126,3 +127,4 @@ COLORS = {
 ---
 
 **Built for academic excellence** | February 2026
+```
