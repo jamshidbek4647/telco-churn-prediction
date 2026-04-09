@@ -2,8 +2,8 @@
 
 ### ✨ Features
 - **84.57% ROC-AUC** performance with Gradient Boosting (after hyperparameter tuning)
-- **4 ML Models** compared: Logistic Regression, Random Forest, Gradient Boosting, Neural Network
-- **3 Analysis Modes**: Individual, Batch, Performance Evaluation
+- **4 fodels** compared: Logistic Regression, Random Forest, Gradient Boosting, Neural Network
+- **3 Analysis Modes**: Individual Analysis, Bulk Customer Analysis, Model Performance
 - **Fixed UI** with perfect color contrast
 - **Relative Paths** works from any directory
 
@@ -11,19 +11,19 @@
 
 ```
 ├── data/
-│   └── telco-churn.csv          # Real Kaggle dataset
+│   └── telco-churn.csv
 ├── models/
-│   ├── models.pkl               # Trained models
-│   ├── scaler.pkl               # Feature scaler
-│   ├── ordinal_encoder.pkl      # Ordinal encoder for Tenure_Category
-│   ├── feature_names.pkl        # Feature names
-│   ├── model_metrics.json       # Performance metrics
-│   └── test_data.pkl            # Test set
-├── config.py                    # Configuration
-├── app.py                       # Streamlit app
-├── train_models.py              # Training pipeline
-├── requirements.txt             # Dependencies
-└── README.md                    # This file
+│   ├── models.pkl
+│   ├── scaler.pkl
+│   ├── ordinal_encoder.pkl
+│   ├── feature_names.pkl
+│   ├── model_metrics.json
+│   └── test_data.pkl
+├── config.py
+├── app.py
+├── train_models.py
+├── requirements.txt
+└── README.md
 ```
 
 ### 🚀 Quick Start
@@ -37,31 +37,18 @@ python train_models.py
 
 # 3. Run app
 streamlit run app.py
-```
+📊 Model Performance
+Model	ROC-AUC	F1-Score	Accuracy
+Gradient Boosting	0.8457	0.5771	0.8034
+Logistic Regression	0.8413	0.6180	0.7402
+Random Forest	0.8407	0.6323	0.7672
+Neural Network	0.8354	0.5810	0.7963
+🎨 Fixed Issues
+✅ Color Contrast: Dark text on light backgrounds (perfectly readable) ✅ Relative Paths: Uses config.py, works from any directory ✅ Real Dataset: Kaggle Telco Customer Churn data ✅ Performance: 84.57% ROC-AUC vs 70% with synthetic data ✅ Smart Encoding: Ordinal encoding for ordered features, One-Hot for nominal ✅ Hyperparameter Tuning: RandomizedSearchCV optimization for RF and GB models
 
-### 📊 Model Performance
+🔧 Configuration
+Edit config.py to customize:
 
-| Model | ROC-AUC | F1-Score | Accuracy |
-|-------|---------|----------|----------|
-| **Gradient Boosting** | **0.8457** | **0.5771** | **0.8034** |
-| Logistic Regression | 0.8413 | 0.6180 | 0.7402 |
-| Random Forest | 0.8407 | 0.6323 | 0.7672 |
-| Neural Network | 0.8354 | 0.5810 | 0.7963 |
-
-### 🎨 Fixed Issues
-
-✅ **Color Contrast**: Dark text on light backgrounds (perfectly readable)
-✅ **Relative Paths**: Uses config.py, works from any directory  
-✅ **Real Dataset**: Kaggle Telco Customer Churn data
-✅ **Performance**: 84.57% ROC-AUC vs 70% with synthetic data
-✅ **Smart Encoding**: Ordinal encoding for ordered features, One-Hot for nominal
-✅ **Hyperparameter Tuning**: RandomizedSearchCV optimization for RF and GB models
-
-### 🔧 Configuration
-
-Edit `config.py` to customize:
-
-```python
 # Risk thresholds
 LOW_RISK_THRESHOLD = 0.30   # <30% = Low
 HIGH_RISK_THRESHOLD = 0.70  # >70% = High
@@ -72,57 +59,53 @@ COLORS = {
     'medium_risk_text': '#78350F',  # Dark orange
     'high_risk_text': '#7F1D1D',    # Dark red
 }
-```
+📚 Methodology
+Feature Engineering:
 
-### 📚 Methodology
+Tenure Category (New/Medium/Long)
+Total Services (count)
+Average Monthly Spend
+Contract Value
+Service Density
+Encoding:
 
-**Feature Engineering:**
-1. Tenure Category (New/Medium/Long)
-2. Total Services (count)
-3. Average Monthly Spend
-4. Contract Value
-5. Service Density
+Ordinal Encoding for Tenure_Category (preserves New → Medium → Long order)
+One-Hot Encoding for remaining categorical features
+Training:
 
-**Encoding:**
-- Ordinal Encoding for Tenure_Category (preserves New → Medium → Long order)
-- One-Hot Encoding for remaining categorical features
+80/20 stratified split
+5-fold cross-validation
+Class weights for imbalance
+StandardScaler for numerical features
+RandomizedSearchCV hyperparameter tuning (n_iter=100, cv=5) for Gradient Boosting and Random Forest
+Evaluation:
 
-**Training:**
-- 80/20 stratified split
-- 5-fold cross-validation
-- Class weights for imbalance
-- StandardScaler for numerical features
-- RandomizedSearchCV hyperparameter tuning (n_iter=100, cv=5) for Gradient Boosting and Random Forest
+ROC-AUC (primary metric)
+Precision-Recall curves
+Confusion matrices
+F1-Score, Precision, Recall
+🎯 Usage
+Individual Analysis:
 
-**Evaluation:**
-- ROC-AUC (primary metric)
-- Precision-Recall curves
-- Confusion matrices
-- F1-Score, Precision, Recall
+Enter customer details
+Click "Predict"
+View risk level and top factors
+Bulk Customer Analysis:
 
-### 🎯 Usage
+Upload CSV/XLSX
+Click "Analyze"
+Download results
+Model Performance:
 
-**Individual Analysis:**
-1. Enter customer details
-2. Click "Predict"
-3. View risk level and top factors
+Compare all 4 models
+View metrics and curves
+Select different models
+🙏 Acknowledgments
+Dataset: IBM Telco Customer Churn (Kaggle)
+Framework: Streamlit
+ML Library: Scikit-learn
+🔗 Source Code
+Available at: https://github.com/jamshidbek4647/telco-churn-prediction
 
-**Batch Analysis:**
-1. Upload CSV/XLSX
-2. Click "Analyze"
-3. Download results
+Built for academic excellence | February 2026
 
-**Model Performance:**
-- Compare all 4 models
-- View metrics and curves
-- Select different models
-
-### 🙏 Acknowledgments
-
-- Dataset: IBM Telco Customer Churn (Kaggle)
-- Framework: Streamlit
-- ML Library: Scikit-learn
-
----
-
-**Built for academic excellence** | February 2026
