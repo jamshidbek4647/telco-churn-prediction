@@ -124,6 +124,9 @@ COLORS = {
 - Framework: Streamlit
 - ML Library: Scikit-learn
 
+### 🔗 Source Code
+Available at: https://github.com/jamshidbek4647/telco-churn-prediction
+
 ---
 
 **Built for academic excellence** | February 2026
