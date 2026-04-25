@@ -49,14 +49,6 @@ streamlit run app.py
 | Random Forest | 0.8407 | 0.6323 | 0.7672 |
 | Neural Network | 0.8354 | 0.5810 | 0.7963 |
 
-### 🎨 Fixed Issues
-
-✅ **Color Contrast**: Dark text on light backgrounds (perfectly readable)
-✅ **Relative Paths**: Uses config.py, works from any directory
-✅ **Real Dataset**: Kaggle Telco Customer Churn data
-✅ **Performance**: 84.57% ROC-AUC vs 70% with synthetic data
-✅ **Smart Encoding**: Ordinal encoding for ordered features, One-Hot for nominal
-✅ **Hyperparameter Tuning**: RandomizedSearchCV optimization for RF and GB models
 
 ### 🔧 Configuration
 
