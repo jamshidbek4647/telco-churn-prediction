@@ -1,3 +1,4 @@
+```markdown
 # Telco Customer Churn Prediction
 
 ### ✨ Features
@@ -43,12 +44,35 @@ Gradient Boosting	0.8457	0.5771	0.8034
 Logistic Regression	0.8413	0.6180	0.7402
 Random Forest	0.8407	0.6323	0.7672
 Neural Network	0.8354	0.5810	0.7963
-🎨 Fixed Issues
-✅ Color Contrast: Dark text on light backgrounds (perfectly readable) ✅ Relative Paths: Uses config.py, works from any directory ✅ Real Dataset: Kaggle Telco Customer Churn data ✅ Performance: 84.57% ROC-AUC vs 70% with synthetic data ✅ Smart Encoding: Ordinal encoding for ordered features, One-Hot for nominal ✅ Hyperparameter Tuning: RandomizedSearchCV optimization for RF and GB models
+
 
 🔧 Configuration
 Edit config.py to customize:
 
+<<<<<<< HEAD
+=======
+| Model | ROC-AUC | F1-Score | Accuracy |
+|-------|---------|----------|----------|
+| **Gradient Boosting** | **0.8457** | **0.5771** | **0.8034** |
+| Logistic Regression | 0.8413 | 0.6180 | 0.7402 |
+| Random Forest | 0.8407 | 0.6323 | 0.7672 |
+| Neural Network | 0.8354 | 0.5810 | 0.7963 |
+
+### 🎨 Fixed Issues
+
+✅ **Color Contrast**: Dark text on light backgrounds (perfectly readable)
+✅ **Relative Paths**: Uses config.py, works from any directory
+✅ **Real Dataset**: Kaggle Telco Customer Churn data
+✅ **Performance**: 84.57% ROC-AUC vs 70% with synthetic data
+✅ **Smart Encoding**: Ordinal encoding for ordered features, One-Hot for nominal
+✅ **Hyperparameter Tuning**: RandomizedSearchCV optimization for RF and GB models
+
+### 🔧 Configuration
+
+Edit `config.py` to customize:
+
+```python
+>>>>>>> 2f99ebf093865c039d18d97a674a5b4ee8fdd242
 # Risk thresholds
 LOW_RISK_THRESHOLD = 0.30   # <30% = Low
 HIGH_RISK_THRESHOLD = 0.70  # >70% = High
@@ -107,5 +131,31 @@ ML Library: Scikit-learn
 🔗 Source Code
 Available at: https://github.com/jamshidbek4647/telco-churn-prediction
 
+<<<<<<< HEAD
 Built for academic excellence | February 2026
 
+=======
+**Bulk Customer Analysis:**
+1. Upload CSV/XLSX
+2. Click "Analyze"
+3. Download results
+
+**Model Performance:**
+- Compare all 4 models
+- View metrics and curves
+- Select different models
+
+### 🙏 Acknowledgments
+
+- Dataset: IBM Telco Customer Churn (Kaggle)
+- Framework: Streamlit
+- ML Library: Scikit-learn
+
+### 🔗 Source Code
+Available at: https://github.com/jamshidbek4647/telco-churn-prediction
+
+---
+
+**Built for academic excellence** | February 2026
+```
+>>>>>>> 2f99ebf093865c039d18d97a674a5b4ee8fdd242
