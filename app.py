@@ -583,7 +583,26 @@ with tab2:
 
     if uploaded:
         try:
-            batch = pd.read_csv(uploaded) if uploaded.name.endswith('.csv') else pd.read_excel(uploaded)
+            # Read file
+            try:
+                batch = pd.read_csv(uploaded) if uploaded.name.endswith('.csv') else pd.read_excel(uploaded)
+            except Exception as e:
+                st.error(f"❌ Could not read file: {str(e)}")
+                st.stop()
+
+            # Validate columns
+            required_columns = ['gender', 'SeniorCitizen', 'Partner', 'Dependents', 'tenure',
+                              'PhoneService', 'MultipleLines', 'InternetService', 'OnlineSecurity',
+                              'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV',
+                              'StreamingMovies', 'Contract', 'PaperlessBilling', 'PaymentMethod',
+                              'MonthlyCharges', 'TotalCharges']
+            
+            missing_cols = [col for col in required_columns if col not in batch.columns]
+            if missing_cols:
+                st.error(f"❌ Missing columns: {', '.join(missing_cols)}")
+                st.info("Please ensure your dataset has all required columns (case-sensitive)")
+                st.stop()
+                
             st.success(f"✓ Loaded {len(batch)} customers")
 
             with st.expander("📋 Preview"):
@@ -591,17 +610,21 @@ with tab2:
 
             if st.button("🚀 Analyze Batch", type="primary", use_container_width=True):
                 with st.spinner("Running predictions…"):
-                    ids       = batch['customerID'].tolist() if 'customerID' in batch.columns \
-                                else [f"Customer_{i+1}" for i in range(len(batch))]
-                    processed = preprocess_input(batch)
-                    probs     = predict(selected_model, processed)
-                    risk_cats = [get_risk_category(p)[0] for p in probs]
+                    try:
+                        ids       = batch['customerID'].tolist() if 'customerID' in batch.columns \
+                                    else [f"Customer_{i+1}" for i in range(len(batch))]
+                        processed = preprocess_input(batch)
+                        probs     = predict(selected_model, processed)
+                        risk_cats = [get_risk_category(p)[0] for p in probs]
 
-                    results = pd.DataFrame({
-                        'Customer ID': ids,
-                        'Churn Probability': probs,
-                        'Risk Category': risk_cats
-                    })
+                        results = pd.DataFrame({
+                            'Customer ID': ids,
+                            'Churn Probability': probs,
+                            'Risk Category': risk_cats
+                        })
+                    except Exception as e:
+                        st.error(f"❌ Processing error: {str(e)}")
+                        st.stop()
 
                 # ── Summary cards ─────────────────────────────────────────────
                 st.markdown("## 📊 Analysis Summary")
