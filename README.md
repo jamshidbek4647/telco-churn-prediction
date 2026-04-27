@@ -146,7 +146,7 @@ Built for academic excellence | February 2026
 ### 🔗 Source Code
 Available at: https://github.com/jamshidbek4647/telco-churn-prediction
 
-The web-app is deployed at: https://telco-churn-prediction-00016720.streamlit.app/
+The web-app is deployed at: https://telco-churn-prediction-00016720.streamlit.app
 ---
 
 **Built for academic excellence** | February 2026
