@@ -98,22 +98,25 @@ def compute_shap(model_name: str, input_raw: np.ndarray, input_scaled: np.ndarra
 
     # ── Linear SHAP (Logistic Regression) ───────────────────────────────────
     if model_name == 'Logistic Regression':
-        coef = model.coef_[0]                          # shape (n_feat,)
+        coef = model.coef_[0]
+        intercept = model.intercept_[0]
         bg_mean = _X_bg_scaled.mean(axis=0)
-
-        # Baseline prediction with mean background
-        bg_mean_df = pd.DataFrame([bg_mean], columns=feature_names)
-        p_base = model.predict_proba(bg_mean_df)[0, 1]
-
+        
+        # Baseline logit and probability
+        logit_base = intercept + np.dot(coef, bg_mean)
+        p_base = 1 / (1 + np.exp(-logit_base))
+        
+        # Calculate SHAP for each feature
         shap_vals = np.zeros(n_feat)
         for i in range(n_feat):
-            # Replace feature i in background mean with sample value
-            perturbed = bg_mean.copy()
-            perturbed[i] = input_scaled[0, i]
-            pert_df = pd.DataFrame([perturbed], columns=feature_names)
-            p_pert  = model.predict_proba(pert_df)[0, 1]
+            # Marginal contribution in logit space
+            delta_logit = coef[i] * (input_scaled[0, i] - bg_mean[i])
+            
+            # Convert to probability space
+            logit_pert = logit_base + delta_logit
+            p_pert = 1 / (1 + np.exp(-logit_pert))
             shap_vals[i] = p_pert - p_base
-
+        
         return shap_vals
 
     # ── Perturbation SHAP (Tree / NN) ────────────────────────────────────────
