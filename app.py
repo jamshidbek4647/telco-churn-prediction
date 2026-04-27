@@ -211,9 +211,10 @@ def plot_shap_waterfall(shap_values: np.ndarray, base_rate: float,
     red_patch   = mpatches.Patch(color='#EF4444', alpha=0.85, label='Increases churn risk ↑')
     green_patch = mpatches.Patch(color='#10B981', alpha=0.85, label='Decreases churn risk ↓')
     ax.legend(handles=[red_patch, green_patch,
-                        plt.Line2D([0],[0], color='#6B7280', lw=1.5, ls='--', label=f'Base rate: {base_rate*100:.1f}%'),
-                        plt.Line2D([0],[0], color='#1D4ED8', lw=2,   ls='-',  label=f'Prediction: {final_prob*100:.1f}%')],
-              loc='lower right', fontsize=9, framealpha=0.9)
+                    plt.Line2D([0],[0], color='#6B7280', lw=1.5, ls='--', label=f'Base rate: {base_rate*100:.1f}%'),
+                    plt.Line2D([0],[0], color='#1D4ED8', lw=2,   ls='-',  label=f'Prediction: {final_prob*100:.1f}%')],
+          loc='center left', bbox_to_anchor=(1.02, 0.5), fontsize=9, 
+          framealpha=0.95, edgecolor='#E5E7EB')
 
     ax.invert_yaxis()
     ax.grid(axis='x', alpha=0.3)
